@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import "./FormPage.css";
 
 export const DetailPage = () => {
   const location = useLocation();
@@ -15,13 +16,29 @@ export const DetailPage = () => {
   return (
     <div className="details-container">
       <h1>Details Page</h1>
-      <p>
-        <strong>Name:</strong> {formData.name}
-      </p>
-      <p>
-        <strong>Email:</strong> {formData.email}
-      </p>
-      <Link to="/">Go Back</Link>
+      <table className="details-table">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td>{formData.name}</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>{formData.email}</td>
+          </tr>
+          <tr>
+            <td>Phone Number</td>
+            <td>{formData.phone}</td>
+          </tr>
+        </tbody>
+      </table>
+      <Link to="/" className="back-link">Go Back</Link>
     </div>
   );
 };
