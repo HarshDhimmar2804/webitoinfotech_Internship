@@ -15,7 +15,6 @@ const FormPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Focus on the name input field when the component mounts
     nameRef.current.focus();
   }, []);
 
