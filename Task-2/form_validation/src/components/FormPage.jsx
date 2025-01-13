@@ -1,43 +1,62 @@
-import { useState } from "react";
+import { useState, useRef, useEffect, useContext, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { FormContext } from "./FormContext";
 import "./FormPage.css";
 
-export const FormPage = () => {
-  const [formData, setFormData] = useState({ name: "", email: "" });
+const FormPage = () => {
+  const { setFormData } = useContext(FormContext);
+  const [formState, setFormState] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
   const [errors, setErrors] = useState({});
+  const nameRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    // Focus on the name input field when the component mounts
+    nameRef.current.focus();
+  }, []);
 
-  const validate = () => {
+  const validate = useCallback(() => {
     const newErrors = {};
-    if (!formData.name) newErrors.name = "Name is required.";
-    if (!formData.email) {
+    if (!formState.name) newErrors.name = "Name is required.";
+    if (!formState.email) {
       newErrors.email = "Email is required.";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
       newErrors.email = "Email is invalid.";
     }
-    if (!formData.phone) {
+    if (!formState.phone) {
       newErrors.phone = "Phone number is required.";
-    } else if (!/^\d{10}$/.test(formData.phone)) {
+    } else if (!/^\d{10}$/.test(formState.phone)) {
       newErrors.phone = "Phone number must be 10 digits.";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  }, [formState]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      navigate("/details", { state: formData });
-    }
-  };
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (validate()) {
+        setFormData(formState);
+        navigate("/details");
+      }
+    },
+    [formState, validate, navigate, setFormData]
+  );
+
+  const handleChange = useCallback(
+    (e) => {
+      setFormState({ ...formState, [e.target.name]: e.target.value });
+    },
+    [formState]
+  );
 
   return (
     <div className="form-container">
-      <h1>Basic Form</h1>
+      <h1>Form Page</h1>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name:</label>
@@ -45,8 +64,9 @@ export const FormPage = () => {
             type="text"
             id="name"
             name="name"
-            value={formData.name}
+            value={formState.name}
             onChange={handleChange}
+            ref={nameRef}
           />
           {errors.name && <p className="error">{errors.name}</p>}
         </div>
@@ -56,7 +76,7 @@ export const FormPage = () => {
             type="email"
             id="email"
             name="email"
-            value={formData.email}
+            value={formState.email}
             onChange={handleChange}
           />
           {errors.email && <p className="error">{errors.email}</p>}
@@ -67,7 +87,7 @@ export const FormPage = () => {
             type="text"
             id="phone"
             name="phone"
-            value={formData.phone}
+            value={formState.phone}
             onChange={handleChange}
           />
           {errors.phone && <p className="error">{errors.phone}</p>}
@@ -77,3 +97,5 @@ export const FormPage = () => {
     </div>
   );
 };
+
+export default FormPage;

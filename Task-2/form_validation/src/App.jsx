@@ -1,17 +1,19 @@
-import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { FormPage } from "./components/FormPage";
-import { DetailPage } from "./components/DetailPage";
+import { FormProvider } from "./components/FormContext";
+import FormPage from "./components/FormPage";
+import DetailsPage from "./components/DetailPage";
 
-function App() {
+const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<FormPage />} />
-        <Route path="/details" element={<DetailPage />} />
-      </Routes>
-    </Router>
+    <FormProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<FormPage />} />
+          <Route path="/details" element={<DetailsPage />} />
+        </Routes>
+      </Router>
+    </FormProvider>
   );
-}
+};
 
 export default App;

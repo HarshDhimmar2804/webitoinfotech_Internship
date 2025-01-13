@@ -1,9 +1,19 @@
-import { Link, useLocation } from "react-router-dom";
+import { useContext, useMemo } from "react";
+import { FormContext } from "./FormContext";
+import { Link } from "react-router-dom";
 import "./FormPage.css";
 
-export const DetailPage = () => {
-  const location = useLocation();
-  const formData = location.state;
+const DetailsPage = () => {
+  const { formData } = useContext(FormContext);
+
+  const tableRows = useMemo(() => {
+    if (!formData) return null;
+    return [
+      { field: "Name", value: formData.name },
+      { field: "Email", value: formData.email },
+      { field: "Phone Number", value: formData.phone },
+    ];
+  }, [formData]);
 
   if (!formData) {
     return (
@@ -24,21 +34,19 @@ export const DetailPage = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Name</td>
-            <td>{formData.name}</td>
-          </tr>
-          <tr>
-            <td>Email</td>
-            <td>{formData.email}</td>
-          </tr>
-          <tr>
-            <td>Phone Number</td>
-            <td>{formData.phone}</td>
-          </tr>
+          {tableRows.map((row, index) => (
+            <tr key={index}>
+              <td>{row.field}</td>
+              <td>{row.value}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
-      <Link to="/" className="back-link">Go Back</Link>
+      <Link to="/" className="back-link">
+        Go Back
+      </Link>
     </div>
   );
 };
+
+export default DetailsPage;
