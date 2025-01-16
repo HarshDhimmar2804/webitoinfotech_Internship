@@ -38,7 +38,7 @@ const FormPage = () => {
     }
 
     setError("");
-    navigate("/details", { state: { formData } }); // Redirect to DetailsPage with formData
+    navigate("/details", { state: { formData } }); 
   };
 
   return (
