@@ -42,14 +42,12 @@ const FormPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+      setErrors(validationErrors);  
       setFormError("Please correct the highlighted errors.");
       return;
     }
-
     setFormError("");
     navigate("/details", { state: { formData } });
   };
