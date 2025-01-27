@@ -2,26 +2,38 @@ import Link from "next/link";
 
 const Header = () => {
   return (
-    <header className="bg-blue-500 p-4 text-white">
-      <nav>
-        <ul className="flex space-x-4">
+    <header className="bg-slate-900 shadow-md">
+      <nav className="container mx-auto p-4">
+        <ul className="flex justify-center items-center space-x-6">
           <li>
-            <Link href="/" className="hover:text-gray-300">
+            <Link
+              href="/"
+              className="text-white text-lg font-medium hover:text-gray-300 transition duration-300"
+            >
               Home
             </Link>
           </li>
           <li>
-            <Link href="/about" className="hover:text-gray-300">
+            <Link
+              href="/about"
+              className="text-white text-lg font-medium hover:text-gray-300 transition duration-300"
+            >
               About
             </Link>
           </li>
           <li>
-            <Link href="/crud" className="hover:text-gray-300">
+            <Link
+              href="/crud"
+              className="text-white text-lg font-medium hover:text-gray-300 transition duration-300"
+            >
               CRUD Operations
             </Link>
           </li>
           <li>
-            <Link href="/user" className="hover:text-gray-300">
+            <Link
+              href="/user"
+              className="text-white text-lg font-medium hover:text-gray-300 transition duration-300"
+            >
               User Detail's
             </Link>
           </li>
