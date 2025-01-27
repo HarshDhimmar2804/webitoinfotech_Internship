@@ -15,6 +15,8 @@ const CRUDOperations = () => {
   const [errors, setErrors] = useState({
     name: "",
     email: "",
+    phone: "",
+    website: "",
   });
 
   // Load data from localStorage on mount
@@ -22,7 +24,7 @@ const CRUDOperations = () => {
     setIsClient(true);
     const storedUsers = localStorage.getItem("users");
     if (storedUsers) {
-      setUsers(JSON.parse(storedUsers));
+      setUsers(JSON.parse(storedUsers) ?? []); // Optional chaining ensures no error if JSON.parse returns null
     }
   }, []);
 
@@ -41,15 +43,30 @@ const CRUDOperations = () => {
   const validateInput = () => {
     const errors = {};
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^[0-9]{10}$/; // Ensures phone number is 10 digits
+    const urlRegex =
+      /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w.-]*)*\/?$/;
 
-    if (!userData.name) {
+    if (!userData?.name) {
       errors.name = "Name is required.";
     }
 
-    if (!userData.email) {
+    if (!userData?.email) {
       errors.email = "Email is required.";
-    } else if (!emailRegex.test(userData.email)) {
+    } else if (!emailRegex.test(userData?.email)) {
       errors.email = "Invalid email format.";
+    }
+
+    if (!userData?.phone) {
+      errors.phone = "Phone number is required.";
+    } else if (!phoneRegex.test(userData?.phone)) {
+      errors.phone = "Phone number must be 10 digits.";
+    }
+
+    if (!userData?.website) {
+      errors.website = "Website URL is required.";
+    } else if (!urlRegex.test(userData?.website)) {
+      errors.website = "Invalid website URL format.";
     }
 
     setErrors(errors);
@@ -67,19 +84,21 @@ const CRUDOperations = () => {
 
   // Edit user
   const handleEditUser = (index) => {
-    const userToEdit = users[index];
-    setUserData(userToEdit);
-    setEditMode(true);
-    setEditIndex(index);
+    const userToEdit = users?.[index];
+    if (userToEdit) {
+      setUserData(userToEdit);
+      setEditMode(true);
+      setEditIndex(index);
+    }
   };
 
   // Save edited user
   const handleSaveEdit = () => {
     if (validateInput()) {
-      const updatedUsers = users.map((user, index) =>
+      const updatedUsers = users?.map((user, index) =>
         index === editIndex ? userData : user
       );
-      setUsers(updatedUsers);
+      setUsers(updatedUsers ?? []);
       setEditMode(false);
       setUserData({ name: "", email: "", phone: "", website: "" });
       setErrors({});
@@ -88,8 +107,8 @@ const CRUDOperations = () => {
 
   // Delete a user
   const handleDeleteUser = (index) => {
-    const updatedUsers = users.filter((_, i) => i !== index);
-    setUsers(updatedUsers);
+    const updatedUsers = users?.filter((_, i) => i !== index);
+    setUsers(updatedUsers ?? []);
   };
 
   if (!isClient) {
@@ -105,40 +124,48 @@ const CRUDOperations = () => {
         <input
           type="text"
           name="name"
-          value={userData.name}
+          value={userData?.name ?? ""}
           onChange={handleChange}
           placeholder="Name"
           className="p-2 border border-gray-300 rounded mb-2 w-full"
         />
-        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+        {errors?.name && <p className="text-red-500 text-sm">{errors.name}</p>}
 
         <input
           type="email"
           name="email"
-          value={userData.email}
+          value={userData?.email ?? ""}
           onChange={handleChange}
           placeholder="Email"
           className="p-2 border border-gray-300 rounded mb-2 w-full"
         />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+        {errors?.email && (
+          <p className="text-red-500 text-sm">{errors.email}</p>
+        )}
 
         <input
           type="text"
           name="phone"
-          value={userData.phone}
+          value={userData?.phone ?? ""}
           onChange={handleChange}
           placeholder="Phone"
           className="p-2 border border-gray-300 rounded mb-2 w-full"
         />
+        {errors?.phone && (
+          <p className="text-red-500 text-sm">{errors.phone}</p>
+        )}
 
         <input
           type="text"
           name="website"
-          value={userData.website}
+          value={userData?.website ?? ""}
           onChange={handleChange}
           placeholder="Website"
           className="p-2 border border-gray-300 rounded mb-2 w-full"
         />
+        {errors?.website && (
+          <p className="text-red-500 text-sm">{errors.website}</p>
+        )}
 
         <button
           onClick={editMode ? handleSaveEdit : handleAddUser}
@@ -150,15 +177,17 @@ const CRUDOperations = () => {
 
       {/* User List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {users.map((user, index) => (
+        {users?.map((user, index) => (
           <div
             key={index}
             className="max-w-xs rounded overflow-hidden shadow-lg bg-white p-4"
           >
-            <h2 className="text-xl font-semibold text-gray-800">{user.name}</h2>
-            <p className="text-gray-600">Email: {user.email}</p>
-            <p className="text-gray-600">Phone: {user.phone}</p>
-            <p className="text-gray-600">Website: {user.website}</p>
+            <h2 className="text-xl font-semibold text-gray-800">
+              {user?.name}
+            </h2>
+            <p className="text-gray-600">Email: {user?.email}</p>
+            <p className="text-gray-600">Phone: {user?.phone}</p>
+            <p className="text-gray-600">Website: {user?.website}</p>
             <div className="flex justify-between mt-4">
               <button
                 onClick={() => handleEditUser(index)}
