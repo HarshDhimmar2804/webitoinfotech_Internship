@@ -17,9 +17,19 @@ const CRUDOperations = () => {
     email: "",
   });
 
+  // Load data from localStorage on mount
   useEffect(() => {
     setIsClient(true);
+    const storedUsers = localStorage.getItem("users");
+    if (storedUsers) {
+      setUsers(JSON.parse(storedUsers));
+    }
   }, []);
+
+  // Save users to localStorage whenever users state changes
+  useEffect(() => {
+    localStorage.setItem("users", JSON.stringify(users));
+  }, [users]);
 
   // Handle input change
   const handleChange = (e) => {
