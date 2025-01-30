@@ -6,16 +6,19 @@ const About = () => {
           About This Application
         </h1>
         <p className="text-gray-700 text-lg mb-6 leading-relaxed">
+          Basic About Page
+        </p>
+        {/* <p className="text-gray-700 text-lg mb-6 leading-relaxed">
           Welcome to our Next.js application! Built with modern technologies and
           styled using the power of Tailwind CSS, this app is designed for
           seamless performance and user experience. Explore the app to find out
           more about its intuitive features and functionalities.
-        </p>
-        <p className="text-gray-600 text-md">
+        </p> */}
+        {/* <p className="text-gray-600 text-md">
           Whether you're here to explore the CRUD features, manage your data, or
           learn more about web development, we’ve created an easy-to-navigate
           platform with a clean, responsive design to enhance your journey.
-        </p>
+        </p> */}
       </div>
     </div>
   );

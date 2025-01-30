@@ -9,6 +9,8 @@ import {
   setErrors,
   clearErrors,
 } from "../redux/usersSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CRUDOperations = () => {
   const dispatch = useDispatch();
@@ -24,59 +26,43 @@ const CRUDOperations = () => {
   const [editMode, setEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
 
-  // Validate user input
   const validateInput = () => {
     const validationErrors = {};
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const phoneRegex = /^[0-9]{10}$/;
-    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+    const urlRegex = /^(ftp|http|https):\/\/[^ ""']+$/;
 
-    // Validate name
-    if (!userData.name) {
-      validationErrors.name = "Name is required.";
-    }
-
-    // Validate email
-    if (!userData.email) {
-      validationErrors.email = "Email is required.";
-    } else if (!emailRegex.test(userData.email)) {
+    if (!userData.name) validationErrors.name = "Name is required.";
+    if (!userData.email) validationErrors.email = "Email is required.";
+    else if (!emailRegex.test(userData.email))
       validationErrors.email = "Invalid email format.";
-    }
-
-    // Validate phone number
-    if (!userData.phone) {
-      validationErrors.phone = "Phone number is required.";
-    } else if (!phoneRegex.test(userData.phone)) {
+    if (!userData.phone) validationErrors.phone = "Phone number is required.";
+    else if (!phoneRegex.test(userData.phone))
       validationErrors.phone = "Invalid phone number format (10 digits).";
-    }
-
-    // Validate website
-    if (!userData.website) {
-      validationErrors.website = "Website is required.";
-    } else if (!urlRegex.test(userData.website)) {
+    if (!userData.website) validationErrors.website = "Website is required.";
+    else if (!urlRegex.test(userData.website))
       validationErrors.website = "Invalid website URL format.";
-    }
 
     dispatch(setErrors(validationErrors));
     return Object.keys(validationErrors).length === 0;
   };
 
-  // Add a new user
   const handleAddUser = () => {
     if (validateInput()) {
       dispatch(addUser(userData));
+      toast.success("User added successfully!");
       setUserData({ name: "", email: "", phone: "", website: "" });
       dispatch(clearErrors());
+    } else {
+      toast.error("Please correct the errors before submitting.");
     }
   };
 
-  // Edit user
   const handleEditUser = (index) => {
     const userToEdit = users[index];
     setUserData(userToEdit);
@@ -84,28 +70,30 @@ const CRUDOperations = () => {
     setEditIndex(index);
   };
 
-  // Save edited user
   const handleSaveEdit = () => {
     if (validateInput()) {
       dispatch(editUser({ index: editIndex, updatedUser: userData }));
+      toast.success("User updated successfully!");
       setEditMode(false);
       setUserData({ name: "", email: "", phone: "", website: "" });
       dispatch(clearErrors());
+    } else {
+      toast.error("Please correct the errors before saving.");
     }
   };
 
-  // Delete a user
   const handleDeleteUser = (index) => {
     dispatch(deleteUser(index));
+    toast.success("User deleted successfully!");
   };
 
   return (
     <div className="p-6">
+      <ToastContainer />
       <h1 className="text-3xl font-bold text-center mb-6">
         CRUD Operations with Redux & Local Storage
       </h1>
 
-      {/* Input Form for Creating/Editing Users */}
       <div className="mb-6">
         <input
           type="text"
@@ -157,7 +145,6 @@ const CRUDOperations = () => {
         </button>
       </div>
 
-      {/* User List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {users.map((user, index) => (
           <div

@@ -5,11 +5,12 @@ const Home = () => {
         <h1 className="text-5xl font-extrabold text-slate-900 mb-6">
           Welcome to the Home Page
         </h1>
-        <p className="text-gray-700 text-lg leading-relaxed">
+        <p className="text-gray-700 text-lg leading-relaxed">Basic Home Page</p>
+        {/* <p className="text-gray-700 text-lg leading-relaxed">
           Welcome to a sleek and responsive Next.js application powered by
           Tailwind CSS. Explore intuitive features and enjoy a design crafted
           for simplicity and elegance.
-        </p>
+        </p> */}
         <div className="mt-8 space-x-4">
           <a
             href="/about"
